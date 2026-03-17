@@ -34,16 +34,21 @@ def esperar_descarga(carpeta: Path, timeout=120):
 def crear_driver():
     chrome_options = Options()
 
-    # Obligatorio para Streamlit Cloud
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--window-size=1920,1080")
 
-    # Apuntar al Chromium instalado por packages.txt
-    chrome_options.binary_location = "/usr/bin/chromium"
+    # ← Estos son los nuevos para evitar el crash
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--disable-infobars")
+    chrome_options.add_argument("--single-process")        # menos memoria
+    chrome_options.add_argument("--ignore-certificate-errors")
+    chrome_options.add_argument("--disable-software-rasterizer")
+    chrome_options.add_argument("--remote-debugging-port=9222")
 
+    chrome_options.binary_location = "/usr/bin/chromium"
     chrome_options.add_experimental_option("prefs", {
         "download.default_directory": str(CARPETA_TEMP),
         "download.prompt_for_download": False,
