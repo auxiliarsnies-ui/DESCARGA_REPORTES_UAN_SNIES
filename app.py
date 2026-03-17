@@ -11,6 +11,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 # ─── CONFIGURACIÓN ────────────────────────────────────────────────
 USUARIO        = "1826-admin"
@@ -31,13 +33,17 @@ def esperar_descarga(carpeta: Path, timeout=120):
 
 def crear_driver():
     chrome_options = Options()
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_experimental_option("prefs", {
         "download.default_directory": str(CARPETA_TEMP),
         "download.prompt_for_download": False,
         "download.directory_upgrade": True,
         "profile.default_content_setting_values.automatic_downloads": 1
     })
-    driver = webdriver.Chrome(options=chrome_options)
+
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.execute_cdp_cmd("Browser.setDownloadBehavior", {
         "behavior": "allow",
         "downloadPath": str(CARPETA_TEMP)
