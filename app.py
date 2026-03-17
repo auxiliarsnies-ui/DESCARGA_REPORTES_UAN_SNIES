@@ -62,11 +62,20 @@ def crear_driver():
 def fase_login(driver, log):
     log("🔐 Iniciando sesión...")
     driver.get("https://hecaa.mineducacion.gov.co/hecaa-snies/content/admin/login/login.jsf")
-    time.sleep(1)
+    
+    # Esperar a que el campo usuario esté disponible en vez de time.sleep
+    WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "input[id='loginForm:login-user']"))
+    )
+
     driver.find_element(By.CSS_SELECTOR, "input[id='loginForm:login-user']").send_keys(USUARIO)
     driver.find_element(By.CSS_SELECTOR, "input[id='loginForm:login-password']").send_keys(CONTRASENA)
     driver.find_element(By.ID, "loginForm:submitLogin").click()
-    time.sleep(2)
+
+    # Esperar a que el login termine antes de continuar
+    WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((By.ID, "menu_85"))
+    )
     log("✅ Login exitoso")
 
 def fase_solicitar(driver, log):
