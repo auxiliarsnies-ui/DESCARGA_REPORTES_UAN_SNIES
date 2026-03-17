@@ -33,8 +33,17 @@ def esperar_descarga(carpeta: Path, timeout=120):
 
 def crear_driver():
     chrome_options = Options()
+
+    # Obligatorio para Streamlit Cloud
+    chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--window-size=1920,1080")
+
+    # Apuntar al Chromium instalado por packages.txt
+    chrome_options.binary_location = "/usr/bin/chromium"
+
     chrome_options.add_experimental_option("prefs", {
         "download.default_directory": str(CARPETA_TEMP),
         "download.prompt_for_download": False,
@@ -42,7 +51,7 @@ def crear_driver():
         "profile.default_content_setting_values.automatic_downloads": 1
     })
 
-    service = Service(ChromeDriverManager().install())
+    service = Service("/usr/bin/chromedriver")
     driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.execute_cdp_cmd("Browser.setDownloadBehavior", {
         "behavior": "allow",
