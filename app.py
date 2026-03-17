@@ -15,8 +15,8 @@ from selenium.webdriver.chrome.options import Options
 # ─── CONFIGURACIÓN ────────────────────────────────────────────────
 USUARIO        = "1826-admin"
 CONTRASENA     = "1826Uan9123"
-CARPETA_TEMP   = Path.home() / "Downloads"
-ESPERA_MINUTOS = 60
+CARPETA_TEMP   = Path.home() / "Downloads/Temporal"
+ESPERA_MINUTOS = 1
 # ──────────────────────────────────────────────────────────────────
 
 # ─── Helpers ──────────────────────────────────────────────────────
